@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+    <v-form action="{% url 'user:login' %}" method="post">
+    {% csrf_token %}
+        <v-card class="login-register mt-16 pa-5" max-width="550">
+            <div class="d-flex justify-space-between">
+                <div class="text-h5 log-reg">请登录</div>
+                <v-btn text class="text-h5 primary--text" href="{% url 'user:register' %}">立即注册 &gt</v-btn>
+            </div>
+            <v-divider class="mb-4"></v-divider>
+            <v-text-field label="用户" name="username"></v-text-field>
+            <v-text-field label="密码" type="password" name="password"></v-text-field>
+            <div class="d-flex justify-end">
+                <v-btn class="primary text-h6" type="submit">登录</v-btn>
+            </div>
+        </v-card>
+    </v-form>
+{% endblock main %}

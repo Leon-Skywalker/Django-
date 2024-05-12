@@ -1,0 +1,43 @@
+{% load static %}
+
+{#轮播图#}
+	<v-carousel
+		cycle
+        interval="3000"
+        contain
+        class="mb-2"
+    >
+        {% for banner in banners %}
+        <v-carousel-item
+            src="{% get_media_prefix %}{{ banner.img_url }}"
+            href="{% url 'article:detail' banner.article.id %}"
+		{#不让网页裁剪显示图形#}
+        ></v-carousel-item>
+        {% endfor %}
+    </v-carousel>
+
+	{#热门文章#}
+	<v-row>
+		{% for hot in hot_articles %}
+		<v-col cols="4">
+			<v-card href="{% url 'article:detail' hot.article.id %}">
+				<v-img
+					src="{% get_media_prefix %}{{ hot.article.img_url }}"
+                    contain
+				>
+                   <v-row>
+                       <v-col cols="12" class="white--text ineer-bottom">{{ hot.article.title }}</v-col>
+                   </v-row>
+                </v-img>
+            </v-card>
+        </v-col>
+        {% endfor %}
+    </v-row>
+
+	{#选项卡#}
+	<v-tabs class="mt-2"v-model="tab">
+        <v-tab href="{% url 'home' %}">最新文章</v-tab>
+            {% for tag in tags %}
+		    <v-tab href="{% url 'home' %}?tag={{ tag.id }}">{{ tag.name }}</v-tab>
+            {% endfor %}
+	</v-tabs>

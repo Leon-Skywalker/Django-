@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block main_content %}
+    <v-row>
+        {% for course in course_list %}
+            <v-col cols="3">
+                <v-card href="{% url 'course:detail' course.id %}">
+                    <v-img src="{{ course.img_url }}"></v-img>
+                    <v-card-title>{{ course.title }}</v-card-title>
+                    <v-card-text>{{ course.teacher.name }}</v-card-text>
+                </v-card>
+            </v-col>
+        {% endfor %}
+    </v-row>
+
+
+      <div class="text-center mt-4">
+        <v-pagination
+           v-model="page"
+          :length="{{ paginator.num_pages }}"
+          circle
+          @input="change_page"
+        ></v-pagination>
+      </div>
+{% endblock main_content %}
+
+
+{% block vue-data %}
+    page:{{ page_obj.number }},
+{% endblock %}
+
+
+{% block vue_methods %}
+    change_page:function(pagenum){
+        redirect_href = '{% url "course:list" %}' + "?page=" + pagenum;
+        window.location.href = redirect_href;
+    },
+{% endblock %}
+</html>

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load hot %}
+{% load cache %}
+
+{% block main_content %}
+	{% cache 300 hot_cache %}
+		{% hot %}
+	{% endcache %}
+
+	{#文章列表页#}
+	{% for article in article_list %}
+		<v-card class="mb-5">
+			<v-row>
+				<v-col cols="3">
+			        <a href="{% url 'article:detail' article.id %}">
+			            <v-img src="{% get_media_prefix %}{{ article.img_url }}"></v-img>
+			        </a>
+			    </v-col>
+			    <v-col cols="9">
+			        <v-app-bar-title>{{ article.title }}</v-app-bar-title>
+			        <v-container>
+			            <div>
+			                {{ article.summary }}
+			            </div>
+			            <div>
+			                <div class="float-left">
+			                    <v-chip small>{{ article.tag.name }}</v-chip>
+			                </div>
+			                <div class="float-right">
+			                    <v-chip small>{{ article.author.username }}</v-chip>
+			                    <v-chip small>{{ article.create_time.year }}年{{ article.create_time.month }}月{{ article.create_time.day }}日</v-chip>
+			                </div>
+			            </div>
+			        </v-container>
+			    </v-col>
+			</v-row>
+		</v-card>
+	{% endfor %}
+	    <div class="text-center mt-4">
+	        <v-pagination
+	            v-model="page"
+	            :length="{{ paginator.num_pages }}"
+	            circle
+	            @input="change_page"
+	        >
+	        </v-pagination>
+	    </div>
+{% endblock main_content %}
+
+
+{% block vue-data %}
+    page:{{ page_obj.number }},
+    tab:'',
+{% endblock vue-data %}
+
+{% block vue_mounted %}
+    this.tab = "{% url 'home' %}"
+    if({{ tag_id }}){
+        this.tab = this.tab + "?" + 'tag={{ tag_id }}'
+    }
+{% endblock %}
+
+{% block vue_methods %}
+    change_page:function(number){
+        redirect_href = '{% url "home" %}' + "?page=" + number;
+        if({{ tag_id }}){
+            redirect_href = redirect_href + '&tag={{ tag_id }}';
+        }
+        window.location.href = redirect_href;
+    },
+{% endblock %}

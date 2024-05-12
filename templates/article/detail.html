@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main_content %}
+	{#第一个卡片#}
+	<v-card>
+        <v-card-title class="text-h6">{{ article.title }}</v-card-title>
+        <div class="ml-4">
+	        <v-chip small>{{ article.author.username }}</v-chip>
+	        <v-chip small>{{ article.tag.name }}</v-chip>
+	        <v-chip small>{{ article.create_time.year }}年{{ article.create_time.month }}月{{ article.create_time.day }}日</v-chip>
+        </div>
+    <v-card-text>
+	    {{ article.body | safe }}
+    </v-card-text>
+</v-card>
+	{#第二个卡片#}
+    <v-card class="mt-2">
+        <v-card-title>文章评论({{ comment_count }})</v-card-title>
+	    <form action = "{% url 'article:comment_add' article.id %}" method="post">
+		    {% csrf_token %}
+	        <v-text-field
+	            class="mx-4"
+	            v-model="message1"
+	            label="输入评论内容"
+	            clearable
+	            name="body"
+	        >
+	        </v-text-field>
+	        <div class="d-flex justify-end">
+	            <v-btn
+	                small
+	                color="primary"
+	                type="submit"
+	                class="mr-4 mb-2 white--text"
+	            >
+		            发表评论
+	            </v-btn>
+	        </div>
+	    </form>
+    </v-card>
+	{#第三个卡片#}
+{% for comment in comments %}
+	<v-card class="mt-1">
+        <v-container>
+            <div class="d-flex justify-space-between">
+                <div>
+		            <v-icon>mdi-account</v-icon>
+		            <v-chip small>{{ comment.user.username }}</v-chip>
+                </div>
+                <div>
+	                <v-chip small>{{ comment.create_time.year }}年{{ comment.create_time.month }}月{{ comment.create_time.day }}日</v-chip>
+                </div>
+            </div>
+            <v-card-text>
+                {{ comment.body }}
+            </v-card-text>
+	        {% if comment.parent %}
+            <v-container>
+                <div class="d-flex justify-space-between">
+	                <v-chip small>{{ comment.parent.user}}</v-chip>
+	                <v-chip small>{{ comment.parent.create_time.year }}年{{ comment.parent.create_time.month }}月{{ comment.parent.create_time.day }}日</v-chip>
+                </div>
+	            <v-card-text>
+                    {{ comment.parent.body}}
+                </v-card-text>
+            </v-container>
+	        {% endif %}
+	        <div class="d-flex justify-end">
+                <v-btn text @click="show{{ comment.id }}=!show{{ comment.id }}">回复</v-btn>
+            </div>
+			{#回复的隐藏表单#}
+            <div v-if="show{{ comment.id }}">
+                <form action="{% url 'article:comment_child_add' article.id comment.id %}" method="post">
+                    {% csrf_token %}
+	                <v-text-field name="body"></v-text-field>
+                    <div class="d-flex justify-end">
+                        <v-btn small @click="show{{ comment.id }}=false">取消</v-btn>
+                        <v-btn small color="primary" type="submit">发送</v-btn>
+                    </div>
+                </form>
+            </div>
+        </v-container>
+	</v-card>
+{% endfor %}
+<!--分页-->
+	<div class="text-center mt-4">
+	    <v-pagination
+	        v-model="page"
+	        :length="{{ paginator.num_pages }}"
+	        circle
+	        @input="change_page"
+	    ></v-pagination>
+    </div>
+{% endblock main_content %}
+
+{% block vue-data %}
+	{% for comment in comments %}
+        show{{ comment.id }}: false,
+    {% endfor %}
+    page:{{ page_obj.number }},
+{% endblock vue-data %}
+
+
+{% block vue_methods %}
+    change_page:function(pagenum){
+        redirect_href = '{% url "article:detail" article.id %}' + "?page=" + pagenum;
+        window.location.href = redirect_href;
+    },
+{% endblock %}

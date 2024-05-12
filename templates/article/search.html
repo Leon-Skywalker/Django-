@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block main_content %}
+<v-card class="my-3">
+    <v-row>
+        <v-col cols="3"></v-col>
+        <v-col cols="6">
+            <div class="d-flex">
+                <v-text-field
+                        rounded
+                        filled
+                        placeholder="请输入要搜索的内容"
+                        prepend-inner-icon = 'mdi-magnify'
+                        class="mr-n5 text-h6"
+                        dense
+                        v-model="q"
+                >
+                </v-text-field>
+                <v-btn class="search-btn text-h6 white--text" color="red" height="39" width="70" @click="search">搜索</v-btn>
+            </div>
+        </v-col>
+        <v-col cols="3"></v-col>
+    </v-row>
+</v-card>
+{% if q %}
+{% for article in object_list %}
+<v-card class="mb-3 pa-2">
+    {% if forloop.first %}
+    <v-card-title>搜索结果{{ paginator.num_pages }}页</v-card-title>
+    {% endif %}
+    <v-row>
+      <v-col cols="3">
+          <a href="javascript:void(0)">
+              <v-img
+                src="{% get_media_prefix %}{{ article.object.img_url }}"
+              >
+              </v-img>
+          </a>
+      </v-col>
+      <v-col>
+          <v-app-bar-title>
+              <v-btn text href="{% url 'article:detail' article.object.id %}"  class='text-h6'>{{ article.object.title }}</v-btn>
+          </v-app-bar-title>
+          <v-container>
+              {{ article.object.summary }}
+          </v-container>
+           <div>
+               <div class="float-left">
+                   <v-chip small>{{ article.object.tag.name }}</v-chip>
+               </div>
+               <div class="float-right">
+                   <v-chip small>{{ article.object.author.username }}</v-chip>
+                   <v-chip small>{{ article.object.create_time.year }}年{{ article.object.create_time.month }}月{{ article.object.create_time.day }}日</v-chip>
+               </div>
+           </div>
+      </v-col>
+    </v-row>
+</v-card>
+{% endfor %}
+{% else %}
+{% for article in object_list %}
+<v-card class="mb-3 pa-2">
+    {% if forloop.first %}
+    <v-card-title>热门推荐</v-card-title>
+    {% endif %}
+    <v-row>
+      <v-col cols="3">
+          <a href="javascript:void(0)">
+              <v-img
+                src="{% get_media_prefix %}{{ article.article.img_url }}"
+              >
+              </v-img>
+          </a>
+      </v-col>
+      <v-col>
+          <v-app-bar-title>
+              <v-btn text href="javascript:void(0)"  class='text-h6'>{{ article.article.title }}</v-btn>
+          </v-app-bar-title>
+          <v-container>
+              {{ article.article.summary }}
+          </v-container>
+           <div>
+               <div class="float-left">
+                   <v-chip small>{{ article.article.tag.name }}</v-chip>
+               </div>
+               <div class="float-right">
+                   <v-chip small>{{ article.article.author.username }}</v-chip>
+                   <v-chip small>{{ article.create_time.year }}年{{ article.create_time.month }}月{{ article.create_time.day }}日</v-chip>
+               </div>
+           </div>
+      </v-col>
+    </v-row>
+</v-card>
+{% endfor %}
+{% endif %}
+
+    <v-pagination
+            v-model="page"
+            :length="{{ paginator.num_pages }}"
+            circle
+            @input="change_page"
+    >
+    </v-pagination>
+
+{% endblock main_content %}
+
+{% block vue_data %}
+    page: {{ page_obj.number }},
+{% endblock vue_data %}
+
+{% block vue_methods %}
+    change_page: function(pagenum){
+        redirect_href="{% url 'article:search' %}" + "?page=" +pagenum
+        window.location.href = redirect_href;
+    },
+    search: function(){
+        if(!this.q){return}
+        redirect_href = "{% url 'article:search' %}" + '?q=' + this.q
+        window.location.href = redirect_href
+    },
+
+{% endblock vue_methods %}

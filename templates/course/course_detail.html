@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block my_links %}
+    <link href="//vjs.zencdn.net/8.3.0/video-js.min.css" rel="stylesheet">
+{% endblock my_links %}
+
+
+{% block main_content %}
+{#第一个卡片#}
+    <v-card>
+        <v-card-title>{{ course.title }}</v-card-title>
+        <video
+            id="my-player"
+            class="video-js vjs-fluid"
+            controls
+            preload="auto"
+            poster="{{ course.img_url }}"
+            data-setup='{}'
+        >
+            <source src="{{ course.video_url }}" type="video/mp4"></source>
+            <p class="vjs-no-js">
+	            To view this video please enable JavaScript, and consider upgrading to a
+	            web browser that
+	            <a href="https://videojs.com/html5-video-support/" target="_blank">
+	              supports HTML5 video
+	            </a>
+            </p>
+        </video>
+    </v-card>
+{#第二个卡片#}
+    <v-card class="my-2 pa-2">
+        <div class="desc-title text-h6">{{ course.teacher.name }}</div>
+        <v-card-text>
+            <div class="d-flex">
+                <v-img width="50" contain src="{% static 'images/author.jpg' %}"></v-img>
+                <v-card-text>{{ course.teacher.name }} <br>{{ course.teacher.title }}</v-card-text>
+            </div>
+        </v-card-text>
+        <v-card-text>{{ course.teacher.desc }}</v-card-text>
+    </v-card>
+{#第三个卡片#}
+    <v-card class="my-2 pa-2">
+        <div class="desc-title text-h6">课程大纲</div>
+        <v-card-text>
+            {{ course.outline }}
+        </v-card-text>
+    </v-card>
+    
+{% endblock main_content %}
+
+
+{% block my_js %}
+    <script src="//vjs.zencdn.net/8.3.0/video.min.js"></script>
+{% endblock my_js %}
+
+
+{% block my_video %}
+    var player = videojs('my-player', {playbackRates:[0.5,1,1.5,2]})
+{% endblock %}

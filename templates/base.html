@@ -1,0 +1,301 @@
+{% load static %}
+{% url 'article:search' %}
+<html lang = "en">
+<head>
+	<meta charset = "UTF-8">
+	<title>首页</title>
+	<!--	引入CSS样式文件    -->
+	<link rel = "stylesheet" href = "{% static 'css/fonts-google.css' %}">
+	<link rel = "stylesheet" href = "{% static 'css/materialdesignicons.min.css' %}">
+	<link rel = "stylesheet" href = "{% static 'css/vuetify-v2.6.6.min.css' %}">
+	<link rel = "stylesheet" href = "{% static 'css/common.css' %}">
+	{% block my_links %}
+	{% endblock my_links %}
+</head>
+<body>
+	<v-app id="inspire">
+		<!--页眉-->
+		<v-app-bar
+			app
+			color="primary lighten-2"
+		>
+			<v-app-bar-nav-icon href = "{% url 'home' %}">
+				<v-icon
+					large
+					color="primary darken-1"
+
+				>
+					mdi-language-python
+				</v-icon>
+			</v-app-bar-nav-icon>
+			
+			<v-btn text class="tmenu--text" href = "{% url 'home' %}">首页</v-btn>
+			<v-btn text class="tmenu--text" href = "{% url 'course:list' %}">在线课堂</v-btn>
+			<v-btn text class="tmenu--text" href = "{% url 'doc:list' %}">下载文档</v-btn>
+			<v-btn text class="tmenu--text" href = "{% url 'article:search' %}">搜索</v-btn>
+			
+			<v-spacer></v-spacer>
+			<!--换肤-->
+			<template>
+				<div class = "text-center">
+					<v-menu offset-y>
+						<template v-slot:activator = "{ on, attrs }">
+							<v-btn
+								icon
+								color = "primary lighten-1"
+								dark
+								v-bind = "attrs"
+								v-on = "on"
+							>
+								<v-icon
+									large
+									color = "primary darken-1"
+								>
+									mdi-account-tie
+								</v-icon>
+							</v-btn>
+						</template>
+						<v-list>
+							<template>
+								<div class = "text-center">
+									<v-menu offset-x left>
+										<template v-slot:activator = "{ on, attrs }">
+											<v-list-item v-bind = "attrs" v-on = "on">
+												<v-list-item-title>换肤</v-list-item-title>
+											</v-list-item>
+										</template>
+										<v-list>
+											<v-list-item @click="change_theme('blonde')">
+												<v-list-item-title>棕色系</v-list-item-title>
+											</v-list-item>
+											<v-list-item  @click="change_theme('cyan_white')">
+												<v-list-item-title>青色系</v-list-item-title>
+											</v-list-item>
+											<v-list-item @click="change_theme('pink')">
+												<v-list-item-title>粉色系</v-list-item-title>
+											</v-list-item>
+											<v-list-item @click="change_theme('purple_grey')">
+												<v-list-item-title>紫色系</v-list-item-title>
+											</v-list-item>
+											<v-list-item @click="change_theme('grey')">
+												<v-list-item-title>灰色系</v-list-item-title>
+											</v-list-item>
+										</v-list>
+									</v-menu>
+								</div>
+							</template>
+							<v-list-item href = "{% url 'admin:index' %}">
+								<v-list-item-title>后台</v-list-item-title>
+							</v-list-item>
+							{% if user.is_authenticated %}
+							<v-list-item href = "{% url 'user:logout' %}">
+								<v-list-item-title>退出</v-list-item-title>
+							</v-list-item>
+							{% else %}
+							<v-list-item href = "{% url 'user:login' %}">
+								<v-list-item-title>登录</v-list-item-title>
+							</v-list-item>
+							{% endif %}
+						</v-list>
+					</v-menu>
+				</div>
+			</template>
+		</v-app-bar>
+		<!--主要内容-->
+		<v-main class="primary lighten-5">
+			{% block main %}
+			<v-container>
+				<v-row>
+					<v-col
+						cols = "9"
+					>
+					<!--轮播图-->
+						{% block main_content %}
+						{% endblock main_content %}
+					</v-col>
+					<v-col
+						cols = "3"
+					>
+						<!--第一个卡片-->
+						<v-card>
+		                     <v-app-bar>
+		                         <v-app-bar-title>在线课堂</v-app-bar-title>
+		                         <v-spacer></v-spacer>
+		                         <v-btn icon>更多</v-btn>
+		                     </v-app-bar>
+							
+		                     <v-img src="{% static 'images/python.jpg' %}">
+		                         <v-row>
+		                             <v-col
+		                                cols="12"
+		                                class="white--text ineer-bottom"
+		                             >
+		                                 对话大厂小哥哥
+		                             </v-col>
+		                         </v-row>
+		                     </v-img>
+						</v-card>
+						
+						<!--第二个卡片-->
+						<v-card>
+							<v-card-title class="cyan--text">报名中</v-card-title>
+							<v-card-text>Django项目班</v-card-text>
+						</v-card>
+						
+						<!--第三个卡片-->
+						<v-card>
+							<v-card-title class="grey--text">已结束</v-card-title>
+							<v-card-text>Python基础入门</v-card-text>
+	                    </v-card>
+						<!--第四个卡片-->
+						<v-card class="mt-1">
+							<v-list>
+								<v-card-title>关注我</v-card-title>
+								<v-list-item-group>
+									<v-list-item>
+										<v-list-item-icon>
+											<v-img src="{% static 'images/sina-weibo.svg' %}"></v-img>
+										</v-list-item-icon>
+										<v-list-item-content>python大佬</v-list-item-content>
+									</v-list-item>
+									
+									<v-list-item>
+										<v-list-item-icon>
+											<v-img src="{% static 'images/github.svg' %}"></v-img>
+										</v-list-item-icon>
+										<v-list-item-content>python大佬</v-list-item-content>
+									</v-list-item>
+								</v-list-item-group>
+							</v-list>
+	                    </v-card>
+						<!--第五个卡片-->
+						<v-card class="mt-1">
+							<v-card-title>热门推荐</v-card-title>
+							<v-container>
+								<v-row>
+									<v-col>浅析常用的Python Web的几大框架</v-col>
+									<v-col cols="5">
+										<v-img src="{% static 'images/django-flask.png' %}"></v-img>
+									</v-col>
+								</v-row>
+								<v-chip
+									small
+									color="gray lighten-4"
+									text-color="black"
+								>
+									python
+								</v-chip>
+							</v-container>
+						</v-card>
+						
+					</v-col>
+				</v-row>
+			</v-container>
+			{% endblock main %}
+		</v-main>
+		
+        <!--页脚-->
+		<v-footer color="accent">
+			<v-row>
+				<v-col cols="4"></v-col>
+				<v-col cols="4">
+					<div>
+						<v-btn text class="tfooter-text">关于Python</v-btn>|
+						<v-btn text class="tfooter-text">隐私政策</v-btn>|
+						<v-btn text class="tfooter-text">联系我们</v-btn>|
+						<v-btn text class="tfooter-text">加入我们</v-btn>|
+					</div>
+					<div class="tfooter--text">
+						关于我: <v-icon color="green">mdi-wechat</v-icon>Python大佬:xxx联系方式:400-8888-000(24小时在线)
+					</div>
+				</v-col>
+				<v-col cols="4"></v-col>
+			</v-row>
+		</v-footer>
+        <v-footer color="accent" class="tfooter--text">
+            <v-row>
+                <v-col cols="4"></v-col>
+                <v-col cols="4">
+                    <div> <strong> Copyright © 2024 - 2094 </strong> PYTHON大佬 ALL Rights Reserved.</div>
+                </v-col>
+                <v-col cols="4"></v-col>
+            </v-row>
+        </v-footer>
+		
+	</v-app>
+	<!--	引入JS样式文件     -->
+	<script src = "{% static 'js/vue.js' %}"></script>
+	<script src = "{% static 'js/vuetify-v2.6.6.js' %}"></script>
+    <script src="{% static  'js/vue-cookies.js' %}"></script>
+	{% block my_js %}
+	{% endblock my_js %}
+	<!--    创建模版    -->
+	<script>
+		var app = new Vue({
+			delimiters:[ "[[" , "]]" ],
+			el:"#inspire",
+			data:{
+				{% block vue-data %}
+                {% endblock vue-data %}
+			},
+			vuetify : new Vuetify(),
+			mounted:function(){
+				theme_name = $cookies.get('theme_name');
+				this.change_theme(theme_name || 'pink');
+				{% block my_video %}
+                {% endblock my_video %}
+                {% block vue_mounted %}
+                {% endblock vue_mounted %}
+			},
+			methods:{
+				{% block vue_methods %}
+                {% endblock vue_methods %}
+				change_theme:function(theme_name){
+				    if(theme_name == 'blonde') {
+		                $cookies.set('theme_name', 'blonde');
+		                this.$vuetify.theme.themes.light.primary = '#2F2519';
+		                this.$vuetify.theme.themes.light.secondary = '#4E342E';
+		                this.$vuetify.theme.themes.light.accent = '#2F2519';
+		                this.$vuetify.theme.themes.light.ttitle = '#FCBF1E';
+		                this.$vuetify.theme.themes.light.tfooter = '#8AAE92';
+		                this.$vuetify.theme.themes.light.tmenu = '#FCBF1E';
+		            } else if(theme_name == 'cyan_white') {
+		                $cookies.set('theme_name', 'cyan_white');
+		                this.$vuetify.theme.themes.light.primary = '#0D7377';
+		                this.$vuetify.theme.themes.light.secondary = '#EEEEEE';
+		                this.$vuetify.theme.themes.light.accent = '#0D7377';
+		                this.$vuetify.theme.themes.light.ttitle = '#EEEEEE';
+		                this.$vuetify.theme.themes.light.tfooter = '#FAF6E9';
+		                this.$vuetify.theme.themes.light.tmenu = '#494949';
+		            } else if(theme_name == 'pink') {
+		                $cookies.set('theme_name', 'pink');
+		                this.$vuetify.theme.themes.light.primary = '#E05297';
+		                this.$vuetify.theme.themes.light.secondary = '#F3BAD6';
+		                this.$vuetify.theme.themes.light.accent = '#EA86B6';
+		                this.$vuetify.theme.themes.light.ttitle = '#000000';
+		                this.$vuetify.theme.themes.light.tfooter = '#000000';
+		                this.$vuetify.theme.themes.light.tmenu = '#000000';
+		            } else if(theme_name == 'purple_grey') {
+		                $cookies.set('theme_name', 'purple_grey');
+		                this.$vuetify.theme.themes.light.primary = '#9932CD';
+		                this.$vuetify.theme.themes.light.secondary = '#EAADEA';
+		                this.$vuetify.theme.themes.light.accent = '#DB70DB';
+		                this.$vuetify.theme.themes.light.ttitle = '#FAF6E9';
+		                this.$vuetify.theme.themes.light.tfooter = '#FAF6E9';
+		                this.$vuetify.theme.themes.light.tmenu = '#151515';
+		            }
+		            else if(theme_name == 'grey') {
+		                $cookies.set('theme_name', 'grey');
+		                this.$vuetify.theme.themes.light.primary = '#222831';
+		                this.$vuetify.theme.themes.light.secondary = '#545454';
+		                this.$vuetify.theme.themes.light.accent = '#2F4F4F';
+		                this.$vuetify.theme.themes.light.ttitle = '#FAF6E9';
+		                this.$vuetify.theme.themes.light.tfooter = '#FAF6E9';
+		                this.$vuetify.theme.themes.light.tmenu = '#FAF6E9';
+		            }
+				}
+			},
+		})
+	</script>
+</body>
+</html>

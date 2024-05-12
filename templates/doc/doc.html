@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block main_content %}
+
+<v-img src="{% static 'images/flag.jpg' %}" height="250px"></v-img>
+
+{% for doc in doc_list %}
+    <v-card class="my-1">
+        <v-container>
+            <v-row>
+                <v-col cols="2">
+                    <v-img src="{% get_media_prefix %}{{ doc.img_url }}"></v-img>
+                </v-col>
+                <v-col>
+                    <v-card-title class="text-h6">{{ doc.title }}</v-card-title>
+	                <v-card-text class="text-subtitle-1">
+		                {{ doc.desc | linebreaks }}
+	                </v-card-text>
+	                <div class="d-flex justify-end">
+		                <v-tooltip bottom>
+			                <template v-slot:activator="{ on, attrs }">
+				                <v-btn
+					                text
+					                v-bind="attrs"
+					                v-on="on"
+					                href = "{% url 'doc:view' doc.title %}.pdf"
+				                >
+					                查看
+				                </v-btn>
+			                </template>
+			                <span>单击右键可以下载</span>
+		                </v-tooltip>
+	                </div>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-card>
+{% endfor %}
+
+    <div class="text-center mt-4">
+        <v-pagination
+             v-model="page"
+            :length="{{ paginator.num_pages }}"
+            circle
+            @input="change_page"
+        ></v-pagination>
+    </div>
+{% endblock main_content %}
+
+
+{% block vue-data %}
+    page:{{ page_obj.number }},
+{% endblock vue-data %}
+
+
+{% block vue_methods %}
+    change_page:function(pagenum){
+        redirect_href = '{% url "doc:list" %}' + "?page=" + pagenum;
+        window.location.href = redirect_href;
+    },
+{% endblock %}
