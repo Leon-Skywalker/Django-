@@ -1,0 +1,27 @@
+.ineer-bottom{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+}
+.desc-title{
+    border-left: 6px solid deepskyblue;
+    padding-left: 8px;
+}
+
+.login-register{
+    margin: 0 auto;
+}
+.log-reg{
+    border-bottom: 3px solid purple;
+}
+.email-code{
+    border: 1px dashed grey;
+}
+.highlight_me{
+    color:red;
+}
+.error_style{
+    color:red;
+    font-size:12px;
+}
